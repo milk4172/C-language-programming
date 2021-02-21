@@ -1,4 +1,4 @@
-/*2021.2.20*/
+/*2021.2.21*/
 
 #include <stdio.h>
 #include <iostream>
@@ -46,7 +46,7 @@ void SetBoundary(const MapSize mapsize, char* const mapstart);
 char* AllocatePictureMem(const MapSize mapsize);
 void WelcomeDrawPicture(void);
 void PrintTips(void);
-const MapSize& GetMapSize(MapSize&);
+void GetMapSize(MapSize&);
 bool Move_Draw(char* const map_start, const int start, const MapSize mapsize);
 void CleanStdIn(void);
 void OutPicture(const char*, const int, const int);
@@ -55,19 +55,25 @@ std::string GetFileName(void);
 int main(void)
 {
 	MapSize map;
+	int menu = 0;
+	menu = SelectMenu();
 
-
-	if (SelectMenu() == 2)
+	if (menu == 1)
 	{
-		//*******
+
+
+
+	}
+	else if (menu == 2)
+	{
+		WelcomeDrawPicture();
+		GetMapSize(map);
+		char* ptr_map = AllocatePictureMem(map);
+		SetBoundary(map, ptr_map);
+		while (Move_Draw(ptr_map, map.Width + 1, map));
+		free((char*)ptr_map);
 	}
 
-	WelcomeDrawPicture();
-	GetMapSize(map);
-	char* ptr_map = AllocatePictureMem(map);
-	SetBoundary(map, ptr_map);
-	while (Move_Draw(ptr_map, map.Width + 1, map));
-	free((char*)ptr_map);
 
 	return 0;
 }
@@ -119,6 +125,7 @@ int SelectMenu(void)
 		for (int n = 0; n < Select_menu_count; n++)
 			std::cout << ptr_menu[n] << Menu[n] << std::endl;
 	}
+	free((char*)ptr_menu);
 
 	// user enter enter_key
 	return ++ptr_now;
@@ -163,7 +170,7 @@ void PrintTips(void)
 	printf("       __________________________________________________________________________\n");
 }
 
-const MapSize& GetMapSize(MapSize& mapsize)
+void GetMapSize(MapSize& mapsize)
 {
 	using std::cout;
 	using std::endl;
@@ -181,8 +188,6 @@ const MapSize& GetMapSize(MapSize& mapsize)
 	}
 
 	cout << "\nMap width:" << mapsize.Width << " Map height:" << mapsize.Height << endl;
-	
-	return mapsize;
 }
 
 bool Move_Draw(char* const map_start, const int start, const MapSize mapsize)//map_star: the map address, star:～ location, mapsize: width,height
